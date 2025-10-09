@@ -1,5 +1,5 @@
 import { RoutingBar } from "@/components/common/RoutingBar";
-import { KanbanBoard } from "@/components/routing/KanbanBoard";
+import { KanbanBoard } from "@/components/routing/KanbanBoard/KanbanBoard";
 import styles from "@/styles/components/sections/Wrapper.module.scss";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
@@ -44,7 +44,7 @@ export function Wrapper() {
                     <RoutingBar />
                     <section className={styles.wrapper_routingOutput}>
                         <Routes>
-                            <Route path="/taskscontroller" element={<KanbanBoard createdNewBoard={createdNewBoard} BoardsArr={BoardsArr} />} />
+                            <Route path="/taskscontroller/*" element={<KanbanBoard createdNewBoard={createdNewBoard} BoardsArr={BoardsArr} />} />
                             <Route path="/diary" element={'Obsidian'} />
                             <Route path="/others" element={'hello world'} />
                             <Route path="*" element={<Navigate to="/taskscontroller" replace />} />
