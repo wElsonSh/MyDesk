@@ -1,0 +1,116 @@
+.kanbanBoard {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    box-sizing: border-box;
+    border-radius: 20px;
+    overflow: hidden;
+
+    .kanbanBoard_header {
+        width: 100%;
+        height: 4rem;
+        background-color: #222;
+        border-radius: 20px;
+        padding: 1rem;
+        box-sizing: border-box;
+
+        .kanbanBoard_header_containerNav {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .kanbanBoard_header_containerNav_list {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                position: absolute;
+
+                .kanbanBoard_header_containerNav_list_item,
+                .kanbanBoard_header_containerNav_list_item_creater {
+                    width: fit-content;
+                    height: 100%;
+                    background-color: #666;
+                    border-radius: 10px;
+                    padding: 0.2rem 0.5rem;
+                    box-sizing: border-box;
+                    color: #fff;
+                    font-family: 'CascadiaCode';
+                    gap: 0.2rem;
+                    cursor: pointer;
+                    transition: all .2s ease;
+                    will-change: color;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        color: #f6d868;
+                    }
+                }
+
+                .kanbanBoard_header_containerNav_list_item:nth-child(1) {
+                    min-width: 12rem;
+                    background-color: #121212;
+                    border: 2px dashed #fff;
+                    box-sizing: border-box;
+
+                    &:hover {
+                        color: #b6caeb;
+                    }
+                }
+
+                .kanbanBoard_header_containerNav_list_item_creater {
+                    background-color: #b6caeb;
+                    color: #121212;
+
+                    input {
+                        height: 100%;
+                        width: 10rem;
+                        background-color: transparent;
+                        border: none;
+                        outline: none;
+                        display: inline-block;
+                        overflow: hidden;
+                        color: #121212;
+                        font-family: 'CascadiaCode';
+                        font-size: 17px;
+
+                    }
+
+                    input::placeholder {
+                        color: #121212;
+                        font-family: 'CascadiaCode';
+                        font-size: 17px;
+                    }
+
+                    &:hover {
+                        color: #121212;
+                    }
+
+                    .close_icon {
+                        transition: all .2s ease;
+                        transform: scale(1.3);
+
+                        &:hover {
+                            color: #555;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

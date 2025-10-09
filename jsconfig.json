@@ -1,0 +1,11 @@
+//for IntellyCode
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ],
+        }
+    }
+}
