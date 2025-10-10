@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { NavLink, Route, Routes } from 'react-router-dom';
-export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
 
+export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
     const [isInputVisible, setisInputVisible] = useState(false)
     const [inputValue, setInputValue] = useState("")
     const inputRef = useRef(null)
     const scrollRef = useRef(null)
     const [deskId, setDeskId] = useState(null)
+    const [activeBoardId, setActiveBoardId] = useState(null) // Добавили состояние для активной доски
 
     useEffect(() => {
         if (isInputVisible && inputRef.current) {
@@ -44,8 +45,8 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
 
     const handleSetDeskId = (deskId) => {
         setDeskId(deskId)
+        setActiveBoardId(deskId) // Устанавливаем активную доску
     }
-
 
     return (
         <div className={styles.kanbanBoard}>
@@ -80,14 +81,21 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
                     className={styles.kanbanBoard_header_containerNav}
                     onWheel={handleScrollWheel}>
                     <ul className={styles.kanbanBoard_header_containerNav_list}>
-                        {[...BoardsArr].reverse().map((board => (
+                        {[...BoardsArr].reverse().map((board) => (
                             <li
                                 onClick={() => { handleSetDeskId(board.id) }}
                                 className={styles.kanbanBoard_header_containerNav_list_item}
                                 key={board.id}>
-                                <NavLink className={styles.kanbanBoard_header_containerNav_list_item_Link} to='/taskscontroller/desk_l'><p>{board.name}</p></NavLink>
+                                {/* Упрощаем - используем обычное состояние */}
+                                <NavLink
+                                    className={`${styles.kanbanBoard_header_containerNav_list_item_Link} ${activeBoardId === board.id ? styles.active : ''
+                                        }`}
+                                    to='/taskscontroller/desk_l'
+                                >
+                                    <p>{board.name}</p>
+                                </NavLink>
                             </li>
-                        )))}
+                        ))}
                     </ul>
                 </nav>
             </header>
