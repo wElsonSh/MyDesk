@@ -36,6 +36,17 @@ export function Wrapper() {
         }
     }
 
+    const createdNewDesk = (newDesk) => {
+        console.log(newDesk)
+        // console.log(BoardsArr[newDesk].id)
+        let newDeskElement = {
+            id: newDesk.id,
+            name: newDesk.name,
+            columns: newDesk.columns
+        }
+        setBoardsArr(prev => prev.filter(desk => desk.id !== BoardsArr[newDesk.index].id))
+        setBoardsArr(prev => [...prev, newDeskElement])
+    }
 
     return (
         <BrowserRouter>
@@ -44,7 +55,15 @@ export function Wrapper() {
                     <RoutingBar />
                     <section className={styles.wrapper_routingOutput}>
                         <Routes>
-                            <Route path="/taskscontroller/*" element={<KanbanBoard createdNewBoard={createdNewBoard} BoardsArr={BoardsArr} />} />
+                            <Route
+                                path="/taskscontroller/*"
+                                element={
+                                    <KanbanBoard
+                                        createdNewBoard={createdNewBoard}
+                                        BoardsArr={BoardsArr}
+                                        createdNewDesk={createdNewDesk}
+                                    />}
+                            />
                             <Route path="/diary" element={'Obsidian'} />
                             <Route path="/others" element={'hello world'} />
                             <Route path="*" element={<Navigate to="/taskscontroller" replace />} />

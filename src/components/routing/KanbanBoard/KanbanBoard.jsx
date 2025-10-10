@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { NavLink, Route, Routes } from 'react-router-dom';
-export function KanbanBoard({ createdNewBoard, BoardsArr }) {
+export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
 
     const [isInputVisible, setisInputVisible] = useState(false)
     const [inputValue, setInputValue] = useState("")
@@ -15,6 +15,8 @@ export function KanbanBoard({ createdNewBoard, BoardsArr }) {
     useEffect(() => {
         if (isInputVisible && inputRef.current) {
             inputRef.current.focus()
+        } else {
+            setInputValue('')
         }
     }, [isInputVisible])
 
@@ -26,7 +28,6 @@ export function KanbanBoard({ createdNewBoard, BoardsArr }) {
         if (event.key === "Enter") {
             createdNewBoard(inputValue)
             setisInputVisible(false)
-            setInputValue('')
         }
     }
 
@@ -43,8 +44,8 @@ export function KanbanBoard({ createdNewBoard, BoardsArr }) {
 
     const handleSetDeskId = (deskId) => {
         setDeskId(deskId)
-        console.log(deskId)
     }
+
 
     return (
         <div className={styles.kanbanBoard}>
@@ -66,7 +67,7 @@ export function KanbanBoard({ createdNewBoard, BoardsArr }) {
                             ref={inputRef}
                             onBlur={handleInputBlur}
                             type="text"
-                            placeholder="name: " />
+                            placeholder="desk name: " />
                         <IoCloseSharp
                             onClick={() => {
                                 setisInputVisible(false)
@@ -84,14 +85,19 @@ export function KanbanBoard({ createdNewBoard, BoardsArr }) {
                                 onClick={() => { handleSetDeskId(board.id) }}
                                 className={styles.kanbanBoard_header_containerNav_list_item}
                                 key={board.id}>
-                                <NavLink to='/taskscontroller/desk_l'><p>{board.name}</p></NavLink>
+                                <NavLink className={styles.kanbanBoard_header_containerNav_list_item_Link} to='/taskscontroller/desk_l'><p>{board.name}</p></NavLink>
                             </li>
                         )))}
                     </ul>
                 </nav>
             </header>
             <Routes>
-                <Route path="desk_l" element={<KanbanBoardDesk DeskId={deskId} ArrDesk={BoardsArr} />} />
+                <Route path="desk_l" element={
+                    <KanbanBoardDesk
+                        DeskId={deskId}
+                        ArrDesk={BoardsArr}
+                        createdNewDesk={createdNewDesk}
+                    />} />
             </Routes>
         </div >
     );
