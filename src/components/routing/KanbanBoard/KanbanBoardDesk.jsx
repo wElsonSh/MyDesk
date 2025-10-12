@@ -66,7 +66,11 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk }) {
                             ) : (
                                 ArrDeskColumns.map((column, index) => (
                                     <div key={index} className={styles.KanbanBoardDesk_column}>
-                                        {column}
+                                        <div className={styles.KanbanBoardDesk_column_container}>
+                                            <div className={styles.KanbanBoardDesk_column_title}>
+                                                <p>{column}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))
                             )

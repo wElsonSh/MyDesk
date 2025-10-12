@@ -13,6 +13,8 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
     const [deskId, setDeskId] = useState(null)
     const [activeBoardId, setActiveBoardId] = useState(null) // Добавили состояние для активной доски
 
+
+
     useEffect(() => {
         if (isInputVisible && inputRef.current) {
             inputRef.current.focus()
@@ -83,29 +85,31 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
                     <ul className={styles.kanbanBoard_header_containerNav_list}>
                         {[...BoardsArr].reverse().map((board) => (
                             <li
+
                                 onClick={() => { handleSetDeskId(board.id) }}
                                 className={styles.kanbanBoard_header_containerNav_list_item}
                                 key={board.id}>
-                                {/* Упрощаем - используем обычное состояние */}
                                 <NavLink
-                                    className={`${styles.kanbanBoard_header_containerNav_list_item_Link} ${activeBoardId === board.id ? styles.active : ''
-                                        }`}
-                                    to='/taskscontroller/desk_l'
+                                    // style={{ backgroundColor: activeBoardId === board.id ? "#f5b8dac0" : "#9aab64", color: activeBoardId === board.id ? "#fff" : "#121212" }}
+                                    className={`${styles.kanbanBoard_header_containerNav_list_item_Link} ${activeBoardId === board.id ? styles.active : ''}`}
+                                    to='/taskscontroller/desk'
                                 >
-                                    <p>{board.name}</p>
+                                    <p >{board.name}</p>
                                 </NavLink>
+
                             </li>
                         ))}
                     </ul>
                 </nav>
             </header>
             <Routes>
-                <Route path="desk_l" element={
+                <Route path="desk" element={
                     <KanbanBoardDesk
                         DeskId={deskId}
                         ArrDesk={BoardsArr}
                         createdNewDesk={createdNewDesk}
                     />} />
+                <Route path="*" element={<div className={styles.kanbanBoard_DeskLorem}><p>Choose or create a new board</p></div>} />
             </Routes>
         </div >
     );
