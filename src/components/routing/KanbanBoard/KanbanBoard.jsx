@@ -3,7 +3,7 @@ import styles from "@/styles/components/routing/KanbanBoard.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
 export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
     const [isInputVisible, setisInputVisible] = useState(false)
@@ -11,10 +11,9 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
     const inputRef = useRef(null)
     const scrollRef = useRef(null)
     const [deskId, setDeskId] = useState(null)
-    const [activeBoardId, setActiveBoardId] = useState(null) // Добавили состояние для активной доски
+    const lastBoardId = localStorage.getItem('lastBoardId')
 
-
-
+    console.log(lastBoardId)
     useEffect(() => {
         if (isInputVisible && inputRef.current) {
             inputRef.current.focus()
@@ -47,7 +46,6 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
 
     const handleSetDeskId = (deskId) => {
         setDeskId(deskId)
-        setActiveBoardId(deskId) // Устанавливаем активную доску
     }
 
     return (
@@ -90,11 +88,14 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
                                 className={styles.kanbanBoard_header_containerNav_list_item}
                                 key={board.id}>
                                 <NavLink
-                                    // style={{ backgroundColor: activeBoardId === board.id ? "#f5b8dac0" : "#9aab64", color: activeBoardId === board.id ? "#fff" : "#121212" }}
-                                    className={`${styles.kanbanBoard_header_containerNav_list_item_Link} ${activeBoardId === board.id ? styles.active : ''}`}
-                                    to='/taskscontroller/desk'
+                                    onClick={() => (localStorage.setItem('lastBoardId', board.id))}
+                                    className={({ isActive }) =>
+                                        `${styles.kanbanBoard_header_containerNav_list_item_Link} ${localStorage.getItem('lastBoardId') == board.id ? styles.active : ''
+                                        }`
+                                    }
+                                    to={'/taskscontroller/desk'}
                                 >
-                                    <p >{board.name}</p>
+                                    <p>{board.name}</p>
                                 </NavLink>
 
                             </li>
@@ -103,13 +104,18 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
                 </nav>
             </header>
             <Routes>
-                <Route path="desk" element={
-                    <KanbanBoardDesk
-                        DeskId={deskId}
-                        ArrDesk={BoardsArr}
-                        createdNewDesk={createdNewDesk}
-                    />} />
-                <Route path="*" element={<div className={styles.kanbanBoard_DeskLorem}><p>Choose or create a new board</p></div>} />
+                <Route path="desk" element={localStorage.getItem('lastBoardId') !== null ? (<KanbanBoardDesk
+                    DeskId={localStorage.getItem("lastBoardId")}
+                    ArrDesk={BoardsArr}
+                    createdNewDesk={createdNewDesk}
+                />) : (
+                    <span className={styles.clearBoard}>
+                        <h1>Create a new desk</h1>
+                    </span>
+                )} />
+                <Route path="*" element={<Navigate to="desk" replace />} />
+
+
             </Routes>
         </div >
     );

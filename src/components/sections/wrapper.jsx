@@ -15,13 +15,16 @@ export function Wrapper() {
         }
     });
 
+    const [lastDeskId, setLastDeskId] = useState(null)
+
     useEffect(() => {
         localStorage.setItem("MyBoards", JSON.stringify(BoardsArr));
     }, [BoardsArr])
 
     const createdNewBoard = (newBoard) => {
+        const newId = BoardsArr.length + 1
         let newBoardElement = {
-            id: BoardsArr.length + 1,
+            id: newId,
             name: newBoard.trim(),
             columns: []
         }
@@ -33,6 +36,8 @@ export function Wrapper() {
             console.log("error")
         } else {
             setBoardsArr(prev => [...prev, newBoardElement])
+            setLastDeskId(newId)
+            localStorage.setItem('lastBoardId', JSON.stringify(newId))
         }
     }
 
