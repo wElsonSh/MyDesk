@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
-export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
+export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, createdNewTask }) {
     const [isInputVisible, setisInputVisible] = useState(false)
     const [inputValue, setInputValue] = useState("")
     const inputRef = useRef(null)
@@ -108,6 +108,7 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk }) {
                     DeskId={localStorage.getItem("lastBoardId")}
                     ArrDesk={BoardsArr}
                     createdNewDesk={createdNewDesk}
+                    createdNewTask={createdNewTask}
                 />) : (
                     <span className={styles.clearBoard}>
                         <h1>Create a new desk</h1>

@@ -1,7 +1,9 @@
+import { KanbanBoardDeskColumns } from "@/components/routing/KanbanBoard/KanbanBoardDeskColumns";
 import styles from "@/styles/components/routing/KanbanBoard.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk }) {
+export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk, createdNewTask }) {
+
     var indexDeskId = 0
     for (let i = 0; i in ArrDesk; i++) {
         if (ArrDesk[i].id == DeskId) {
@@ -32,10 +34,15 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk }) {
     const handleCInputKeyDown = (event) => {
         if (event.key === 'Enter') {
             if (cInputValue.trim() != '') {
+                let newDeskcolumns = {
+                    id: ArrDesk[indexDeskId].columns.length + 1,
+                    name: cInputValue,
+                    tasks: []
+                }
                 let newDeskItem = {
                     id: DeskId,
                     name: ArrDesk[indexDeskId].name,
-                    columns: [...ArrDesk[indexDeskId].columns, cInputValue],
+                    columns: [...ArrDesk[indexDeskId].columns, newDeskcolumns],
                     index: indexDeskId
                 }
                 createdNewDesk(newDeskItem)
@@ -58,46 +65,6 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk }) {
     }
 
 
-    const [isInputTVisible, setIsInputTVisible] = useState(false)
-    const [tInputValue, setTInputValue] = useState('')
-    const inputTRef = useRef([])
-    const [tInputIndex, setTInputIndex] = useState(null)
-
-    const setTInputRef = (index) => (element) => {
-        inputTRef.current[index] = element;
-    };
-
-    const handleTInputVisible = (index) => {
-        setTInputIndex(index);
-        setIsInputTVisible(true);
-    };
-
-    useEffect(() => {
-        if (isInputTVisible && tInputIndex !== null && inputTRef.current[tInputIndex]) {
-            inputTRef.current[tInputIndex].focus();
-        }
-    }, [isInputTVisible, tInputIndex]);
-    const handleTInputBlur = () => {
-        setIsInputTVisible(false);
-        setTInputIndex(null);
-    }
-    const handleTInputOnChange = (item) => {
-        setTInputValue(item.target.value);
-    }
-
-    const handleTInputKeyDown = (event) => {
-        if (event.key === "Enter") {
-            if (tInputValue.trim() !== '') {
-                // Здесь добавьте логику создания задачи
-                console.log('Создаем задачу:', tInputValue, 'в колонке:', tInputIndex);
-            }
-            setIsInputTVisible(false);
-            setTInputValue('');
-            setTInputIndex(null);
-        }
-    }
-
-
     return (
         <div className={styles.KanbanBoardDesk}>
             <div onWheel={handleScrollWheel} ref={scrollRef} className={styles.KanbanBoardDesk_container}>
@@ -106,34 +73,10 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk }) {
                         ArrDeskColumns.length === 0 ? (
                             null
                         ) : (
-                            ArrDeskColumns.map((column, index) => (
-                                <div key={index} className={styles.KanbanBoardDesk_column}>
-                                    <ul className={styles.KanbanBoardDesk_column_container}>
-
-                                        <div className={styles.KanbanBoardDesk_column_title_container}>
-
-                                            <div className={styles.KanbanBoardDesk_column_title}>
-                                                <p>{column}</p>
-                                            </div>
-                                            <div className={styles.KanbanBoardDesk_column_taskCreator_container}>
-                                                <span
-                                                    onClick={() => { handleTInputVisible(index) }}
-                                                    style={{ display: isInputTVisible && tInputIndex == index ? 'none' : 'flex' }}
-                                                    className={styles.KanbanBoardDesk_column_taskCreator_btn}><p>Create new task</p> <FaPlus /></span>
-                                                <input
-                                                    value={tInputValue}
-                                                    onKeyDown={handleTInputKeyDown}
-                                                    onChange={handleTInputOnChange}
-                                                    onBlur={handleTInputBlur}
-                                                    style={{ display: isInputTVisible && tInputIndex == index ? 'block' : 'none' }}
-                                                    ref={setTInputRef(index)}
-                                                    type="text" placeholder="task name"
-                                                />
-                                            </div>
-                                        </div>
-                                    </ul>
-                                </div>
-                            ))
+                            <KanbanBoardDeskColumns
+                                createdNewTask={createdNewTask}
+                                ArrDeskColumns={ArrDeskColumns}
+                            />
                         )
                     }
                     <div onClick={() => {

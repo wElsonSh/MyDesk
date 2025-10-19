@@ -15,8 +15,6 @@ export function Wrapper() {
         }
     });
 
-    const [lastDeskId, setLastDeskId] = useState(null)
-
     useEffect(() => {
         localStorage.setItem("MyBoards", JSON.stringify(BoardsArr));
     }, [BoardsArr])
@@ -26,7 +24,7 @@ export function Wrapper() {
         let newBoardElement = {
             id: newId,
             name: newBoard.trim(),
-            columns: []
+            columns: [],
         }
 
         let newBoardNameTrim = newBoard.trim()
@@ -36,21 +34,22 @@ export function Wrapper() {
             console.log("error")
         } else {
             setBoardsArr(prev => [...prev, newBoardElement])
-            setLastDeskId(newId)
             localStorage.setItem('lastBoardId', JSON.stringify(newId))
         }
     }
 
     const createdNewDesk = (newDesk) => {
-        console.log(newDesk)
-        // console.log(BoardsArr[newDesk].id)
         let newDeskElement = {
             id: newDesk.id,
             name: newDesk.name,
-            columns: newDesk.columns
+            columns: newDesk.columns,
         }
         setBoardsArr(prev => prev.filter(desk => desk.id !== BoardsArr[newDesk.index].id))
         setBoardsArr(prev => [...prev, newDeskElement])
+    }
+
+    const createdNewTask = (newTask) => {
+        console.log(newTask)
     }
 
     return (
@@ -67,6 +66,7 @@ export function Wrapper() {
                                         createdNewBoard={createdNewBoard}
                                         BoardsArr={BoardsArr}
                                         createdNewDesk={createdNewDesk}
+                                        createdNewTask={createdNewTask}
                                     />}
                             />
                             <Route path="/diary" element={'Obsidian'} />
