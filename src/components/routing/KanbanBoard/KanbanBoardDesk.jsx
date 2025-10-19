@@ -1,17 +1,13 @@
 import { KanbanBoardDeskColumns } from "@/components/routing/KanbanBoard/KanbanBoardDeskColumns";
+import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
 import styles from "@/styles/components/routing/KanbanBoard.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk, createdNewTask }) {
+export function KanbanBoardDesk() {
 
-    var indexDeskId = 0
-    for (let i = 0; i in ArrDesk; i++) {
-        if (ArrDesk[i].id == DeskId) {
-            indexDeskId = i
-        }
-    }
+    const { currentBoard, selectedBoardId, addColumnToBoard } = useContext(KanbanBoardContext);
 
-    const ArrDeskColumns = [...ArrDesk[indexDeskId].columns]
+    const ArrDeskColumns = [...(currentBoard?.columns || [])];
     const scrollRef = useRef(null)
 
     const handleScrollWheel = (e) => {
@@ -34,20 +30,8 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk, createdNewTas
     const handleCInputKeyDown = (event) => {
         if (event.key === 'Enter') {
             if (cInputValue.trim() != '') {
-                let newDeskcolumns = {
-                    id: ArrDesk[indexDeskId].columns.length + 1,
-                    name: cInputValue,
-                    tasks: []
-                }
-                let newDeskItem = {
-                    id: DeskId,
-                    name: ArrDesk[indexDeskId].name,
-                    columns: [...ArrDesk[indexDeskId].columns, newDeskcolumns],
-                    index: indexDeskId
-                }
-                createdNewDesk(newDeskItem)
-            }
-            else {
+                addColumnToBoard(selectedBoardId, cInputValue)
+            } else {
                 console.log('Error')
             }
             seIstInputCVisible(false)
@@ -73,10 +57,7 @@ export function KanbanBoardDesk({ ArrDesk, DeskId, createdNewDesk, createdNewTas
                         ArrDeskColumns.length === 0 ? (
                             null
                         ) : (
-                            <KanbanBoardDeskColumns
-                                createdNewTask={createdNewTask}
-                                ArrDeskColumns={ArrDeskColumns}
-                            />
+                            <KanbanBoardDeskColumns columns={ArrDeskColumns} />
                         )
                     }
                     <div onClick={() => {

@@ -1,19 +1,11 @@
+import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
 import styles from "@/styles/components/routing/KanbanBoard.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 
-export function KanbanBoardDeskColumns({ ArrDeskColumns, createdNewTask }) {
+export function KanbanBoardDeskColumns({ columns }) {
 
-    const [ArrDeskColumnTasks, setArrDeskColumnTasks] = useState(['Создай новую задачу'])
-
-    if (ArrDeskColumns.tasks === undefined) {
-        console.log(' ')
-    } else {
-        setArrDeskColumnTasks([])
-        setArrDeskColumnTasks([...ArrDeskColumns.tasks])
-    }
-
-    // console.log(ArrDeskColumnTasks)
+    const { addTask, selectedBoardId } = useContext(KanbanBoardContext);
 
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
@@ -42,10 +34,10 @@ export function KanbanBoardDeskColumns({ ArrDeskColumns, createdNewTask }) {
         setTInputValue(item.target.value);
     }
 
-    const handleTInputKeyDown = (event) => {
+    const handleTInputKeyDown = (event, columnId) => {
         if (event.key === "Enter") {
             if (tInputValue.trim() !== '') {
-                createdNewTask(tInputValue)
+                addTask(selectedBoardId, columnId, tInputValue)
             } else {
                 console.log('Error')
             }
@@ -55,7 +47,7 @@ export function KanbanBoardDeskColumns({ ArrDeskColumns, createdNewTask }) {
         }
     }
     return (
-        ArrDeskColumns.map((column) => (
+        columns.map((column) => (
             <div key={column.id} className={styles.KanbanBoardDesk_column}>
                 <div className={styles.KanbanBoardDesk_column_container}>
 
@@ -71,7 +63,7 @@ export function KanbanBoardDeskColumns({ ArrDeskColumns, createdNewTask }) {
                                 className={styles.KanbanBoardDesk_column_taskCreator_btn}><p>Create new task</p> <FaPlus /></span>
                             <input
                                 value={tInputValue}
-                                onKeyDown={handleTInputKeyDown}
+                                onKeyDown={(e) => handleTInputKeyDown(e, column.id)}
                                 onChange={handleTInputOnChange}
                                 onBlur={handleTInputBlur}
                                 style={{ display: isInputTVisible && tInputIndex == column.id ? 'block' : 'none' }}
@@ -82,11 +74,17 @@ export function KanbanBoardDeskColumns({ ArrDeskColumns, createdNewTask }) {
 
                     </div>
 
-                    {ArrDeskColumnTasks.map((task, index) => (
-                        <ul key={index} className={`${styles.KanbanBoardDesk_column_tasksList} ${ArrDeskColumnTasks[0] == 'Создай новую задачу' ? (styles.clear) : (styles.no_clear)}`}>
-                            <li className={styles.KanbanBoardDesk_column_tasksList_item}><p>{task}</p></li>
+                    {(column.tasks && column.tasks.length > 0) ? (
+                        <ul className={`${styles.KanbanBoardDesk_column_tasksList} ${styles.no_clear}`}>
+                            {column.tasks.map((task, index) => (
+                                <li key={index} className={styles.KanbanBoardDesk_column_tasksList_item}><p>{task}</p></li>
+                            ))}
                         </ul>
-                    ))}
+                    ) : (
+                        <ul className={`${styles.KanbanBoardDesk_column_tasksList} ${styles.clear}`}>
+                            <li className={styles.KanbanBoardDesk_column_tasksList_item}><p>Создай новую задачу</p></li>
+                        </ul>
+                    )}
                 </div>
             </div>
         ))

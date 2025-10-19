@@ -1,19 +1,18 @@
 import { KanbanBoardDesk } from "@/components/routing/KanbanBoard/KanbanBoardDesk";
+import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
 import styles from "@/styles/components/routing/KanbanBoard.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
-export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, createdNewTask }) {
+export function KanbanBoard() {
+    const { BoardsArr, createBoard, selectBoard, selectedBoardId } = useContext(KanbanBoardContext);
+
     const [isInputVisible, setisInputVisible] = useState(false)
     const [inputValue, setInputValue] = useState("")
     const inputRef = useRef(null)
     const scrollRef = useRef(null)
-    const [deskId, setDeskId] = useState(null)
-    const lastBoardId = localStorage.getItem('lastBoardId')
-
-    console.log(lastBoardId)
     useEffect(() => {
         if (isInputVisible && inputRef.current) {
             inputRef.current.focus()
@@ -28,7 +27,7 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, create
 
     const handleInputKeyDown = (event) => {
         if (event.key === "Enter") {
-            createdNewBoard(inputValue)
+            createBoard(inputValue)
             setisInputVisible(false)
         }
     }
@@ -44,8 +43,8 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, create
         }
     }
 
-    const handleSetDeskId = (deskId) => {
-        setDeskId(deskId)
+    const handleSetDeskId = (id) => {
+        selectBoard(id)
     }
 
     return (
@@ -88,10 +87,9 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, create
                                 className={styles.kanbanBoard_header_containerNav_list_item}
                                 key={board.id}>
                                 <NavLink
-                                    onClick={() => (localStorage.setItem('lastBoardId', board.id))}
+                                    onClick={() => selectBoard(board.id)}
                                     className={({ isActive }) =>
-                                        `${styles.kanbanBoard_header_containerNav_list_item_Link} ${localStorage.getItem('lastBoardId') == board.id ? styles.active : ''
-                                        }`
+                                        `${styles.kanbanBoard_header_containerNav_list_item_Link} ${selectedBoardId === board.id ? styles.active : ''}`
                                     }
                                     to={'/taskscontroller/desk'}
                                 >
@@ -104,12 +102,9 @@ export function KanbanBoard({ createdNewBoard, BoardsArr, createdNewDesk, create
                 </nav>
             </header>
             <Routes>
-                <Route path="desk" element={localStorage.getItem('lastBoardId') !== null ? (<KanbanBoardDesk
-                    DeskId={localStorage.getItem("lastBoardId")}
-                    ArrDesk={BoardsArr}
-                    createdNewDesk={createdNewDesk}
-                    createdNewTask={createdNewTask}
-                />) : (
+                <Route path="desk" element={selectedBoardId !== null ? (
+                    <KanbanBoardDesk />
+                ) : (
                     <span className={styles.clearBoard}>
                         <h1>Create a new desk</h1>
                     </span>
