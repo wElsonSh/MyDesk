@@ -116,6 +116,8 @@ export function KanbanBoardContextComponent({ children }) {
     };
 
     return (
-        <KanbanBoardContext.Provider value={value}>{children}</KanbanBoardContext.Provider>
+        <KanbanBoardContext.Provider value={value}>
+            {children}
+        </KanbanBoardContext.Provider>
     );
 }
