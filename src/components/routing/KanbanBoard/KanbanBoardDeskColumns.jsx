@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 export function KanbanBoardDeskColumns({ columns }) {
 
-    const { addTask, selectedBoardId, delColumn } = useContext(KanbanBoardContext);
+    const { addTask, selectedBoardId, delColumn, handleSetIsAlertVisible } = useContext(KanbanBoardContext);
 
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
@@ -65,7 +65,10 @@ export function KanbanBoardDeskColumns({ columns }) {
                             <div
                                 className={styles.KanbanBoardDesk_column_title_delContainer}>
                                 <MdDelete
-                                    onClick={() => { handleDelColumn(column.id) }}
+                                    onClick={() => {
+                                        handleDelColumn(column.id)
+                                        handleSetIsAlertVisible('Column')
+                                    }}
                                     id={styles.delete_icon} />
                             </div>
                         </div>

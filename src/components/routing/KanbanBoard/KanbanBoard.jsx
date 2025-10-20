@@ -4,10 +4,11 @@ import styles from "@/styles/components/routing/KanbanBoard.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
 export function KanbanBoard() {
-    const { BoardsArr, createBoard, selectBoard, selectedBoardId } = useContext(KanbanBoardContext);
+    const { BoardsArr, createBoard, selectBoard, selectedBoardId, delBoard, handleSetIsAlertVisible } = useContext(KanbanBoardContext);
 
     const [isInputVisible, setisInputVisible] = useState(false)
     const [inputValue, setInputValue] = useState("")
@@ -98,6 +99,22 @@ export function KanbanBoard() {
 
                             </li>
                         ))}
+                    </ul>
+                </nav>
+                <nav
+                    style={{ display: selectedBoardId != null ? 'block' : 'none' }}
+                    className={styles.kanbanBoard_header_containerNavControl}>
+                    <ul className={styles.kanbanBoard_header_containerNavControl_list}>
+                        <li className={styles.kanbanBoard_header_containerNavControl_list_item}>
+                            <MdEdit id={styles.edit_icon} />
+                        </li>
+                        <li
+                            onClick={delBoard}
+                            className={styles.kanbanBoard_header_containerNavControl_list_item}>
+                            <MdDelete
+                                onClick={() => { handleSetIsAlertVisible('Board') }}
+                                id={styles.delete_icon} />
+                        </li>
                     </ul>
                 </nav>
             </header>

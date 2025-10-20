@@ -120,26 +120,39 @@ export function KanbanBoardContextComponent({ children }) {
             }
             const board = prev[boardIndex];
             const newColumns = (board.columns || []).filter(c => c.id !== Number(idColumn));
-            // If nothing changes, return prev to avoid unnecessary updates
+            // If nothing changed, return prev
             if (newColumns.length === (board.columns || []).length) {
                 return prev;
             }
             const updatedBoard = { ...board, columns: newColumns };
-            // Rebuild array with updated board immutably
             return prev.map((b, idx) => (idx === boardIndex ? updatedBoard : b));
         })
+    }
+
+    const [isAlertVisible, setIsAlertVisible] = useState(false)
+    const [nameAlert, setNameAlert] = useState("")
+
+    const handleSetIsAlertVisible = (name) => {
+        setIsAlertVisible(true)
+        setNameAlert(name)
+        setTimeout(() => {
+            setIsAlertVisible(false)
+        }, 2000)
     }
 
     const value = {
         BoardsArr,
         currentBoard,
         selectedBoardId,
+        isAlertVisible,
+        nameAlert,
         createBoard,
         selectBoard,
         addColumnToBoard,
         addTask,
-        delBoard,
         delColumn,
+        delBoard,
+        handleSetIsAlertVisible,
     };
 
     return (

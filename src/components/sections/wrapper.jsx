@@ -1,10 +1,12 @@
 import { RoutingBar } from "@/components/common/RoutingBar";
 import { KanbanBoard } from "@/components/routing/KanbanBoard/KanbanBoard";
+import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
 import styles from "@/styles/components/sections/Wrapper.module.scss";
+import { useContext } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 export function Wrapper() {
-
+    const { isAlertVisible, nameAlert } = useContext(KanbanBoardContext)
     return (
         <BrowserRouter>
             <main className={styles.wrapper}>
@@ -21,6 +23,11 @@ export function Wrapper() {
                             <Route path="*" element={<Navigate to="/taskscontroller" replace />} />
                         </Routes>
                     </section>
+                </div>
+                <div
+                    style={{ bottom: isAlertVisible ? "0.5rem" : "-5rem" }}
+                    className={styles.alert}>
+                    <p>{nameAlert} successfully deleted</p>
                 </div>
             </main>
         </BrowserRouter>
