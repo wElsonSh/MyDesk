@@ -5,14 +5,12 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 export function KanbanBoardDeskColumns({ columns }) {
 
-    const { addTask, selectedBoardId } = useContext(KanbanBoardContext);
+    const { addTask, selectedBoardId, delColumn } = useContext(KanbanBoardContext);
 
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
     const inputTRef = useRef([])
     const [tInputIndex, setTInputIndex] = useState(null)
-
-    const [isTaskMoving, setIsTaskMoving] = useState()
 
     const setTInputRef = (index) => (element) => {
         inputTRef.current[index] = element;
@@ -49,21 +47,26 @@ export function KanbanBoardDeskColumns({ columns }) {
         }
     }
 
-    const handleTaskMoving = (index) => {
-        setIsTaskMoving(index)
-        console.log(isTaskMoving)
+    const handleDelColumn = (columnId) => {
+        delColumn(columnId)
     }
+
     return (
         columns.map((column) => (
-            <div key={column.id} className={styles.KanbanBoardDesk_column}>
+            <div
+                key={column.id}
+                className={styles.KanbanBoardDesk_column}>
                 <div className={styles.KanbanBoardDesk_column_container}>
 
                     <div className={styles.KanbanBoardDesk_column_title_container}>
 
                         <div className={styles.KanbanBoardDesk_column_title}>
                             <p>{column.name}</p>
-                            <div className={styles.KanbanBoardDesk_column_title_delContainer}>
-                                <MdDelete id={styles.delete_icon} />
+                            <div
+                                className={styles.KanbanBoardDesk_column_title_delContainer}>
+                                <MdDelete
+                                    onClick={() => { handleDelColumn(column.id) }}
+                                    id={styles.delete_icon} />
                             </div>
                         </div>
                         <div className={styles.KanbanBoardDesk_column_taskCreator_container}>
@@ -88,9 +91,7 @@ export function KanbanBoardDeskColumns({ columns }) {
                         <ul className={`${styles.KanbanBoardDesk_column_tasksList} ${styles.no_clear}`}>
                             {column.tasks.map((task, index) => (
                                 <li
-                                    onClick={() => { handleTaskMoving(index) }}
                                     key={index}
-                                    style={{ border: Number(isTaskMoving) == index ? '2px solid #cb4c46' : 'none' }}
                                     className={styles.KanbanBoardDesk_column_tasksList_item}><p>{task}</p></li>
                             ))}
                         </ul>

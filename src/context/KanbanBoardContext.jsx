@@ -104,6 +104,31 @@ export function KanbanBoardContextComponent({ children }) {
             })
         );
     };
+    const delBoard = () => {
+
+        setBoardsArr(prev => prev.filter(b => b.id !== Number(selectedBoardId)))
+        setSelectedBoardId(null)
+    }
+
+
+
+    const delColumn = (idColumn) => {
+        setBoardsArr(prev => {
+            const boardIndex = prev.findIndex(b => b.id === selectedBoardId);
+            if (boardIndex < 0) {
+                return prev;
+            }
+            const board = prev[boardIndex];
+            const newColumns = (board.columns || []).filter(c => c.id !== Number(idColumn));
+            // If nothing changes, return prev to avoid unnecessary updates
+            if (newColumns.length === (board.columns || []).length) {
+                return prev;
+            }
+            const updatedBoard = { ...board, columns: newColumns };
+            // Rebuild array with updated board immutably
+            return prev.map((b, idx) => (idx === boardIndex ? updatedBoard : b));
+        })
+    }
 
     const value = {
         BoardsArr,
@@ -113,6 +138,8 @@ export function KanbanBoardContextComponent({ children }) {
         selectBoard,
         addColumnToBoard,
         addTask,
+        delBoard,
+        delColumn,
     };
 
     return (
