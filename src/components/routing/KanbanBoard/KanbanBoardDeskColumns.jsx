@@ -2,15 +2,19 @@ import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
 import styles from "@/styles/components/routing/KanbanBoard.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdMoreVert } from "react-icons/md";
 export function KanbanBoardDeskColumns({ columns }) {
 
-    const { addTask, selectedBoardId, delColumn, handleSetIsAlertVisible } = useContext(KanbanBoardContext);
+    const { addTask, selectedBoardId, delColumn, handleSetIsAlertVisible, delTask } = useContext(KanbanBoardContext);
 
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
     const inputTRef = useRef([])
     const [tInputIndex, setTInputIndex] = useState(null)
+    const [isTaskMenuOpen, setIsTaskMenuOpen] = useState(false)
+
+    const taskMenu = useRef(null)
+    const taskMenuBtn = useRef(null)
 
     const setTInputRef = (index) => (element) => {
         inputTRef.current[index] = element;
@@ -50,6 +54,35 @@ export function KanbanBoardDeskColumns({ columns }) {
     const handleDelColumn = (columnId) => {
         delColumn(columnId)
     }
+    const [taskIndex, setTaskIndex] = useState()
+    const [columnId, setColumnId] = useState()
+    const handleOpenTaskMenu = (index, columnId) => {
+        setColumnId(columnId)
+        setTaskIndex(index)
+        setIsTaskMenuOpen(true)
+    }
+    const handleTaskClose = () => {
+        setIsTaskMenuOpen(false)
+        setTaskIndex(null)
+    }
+
+    useEffect(() => {
+        const handleClickOutsideTaskMenu = (event) => {
+            if (
+                taskMenu.current && !taskMenu.current.contains(event.target) && taskMenuBtn.current && !taskMenuBtn.current.contains(event.target)
+            ) {
+                setIsTaskMenuOpen(false)
+                setTaskIndex(null)
+            }
+        }
+        if (isTaskMenuOpen) {
+            document.addEventListener("mousedown", handleClickOutsideTaskMenu)
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutsideTaskMenu)
+        }
+    }, [isTaskMenuOpen])
 
     return (
         columns.map((column) => (
@@ -95,7 +128,30 @@ export function KanbanBoardDeskColumns({ columns }) {
                             {column.tasks.map((task, index) => (
                                 <li
                                     key={index}
-                                    className={styles.KanbanBoardDesk_column_tasksList_item}><p>{task}</p></li>
+                                    className={styles.KanbanBoardDesk_column_tasksList_item}>
+                                    <p>{task}</p>
+                                    <MdMoreVert
+                                        style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'none' : 'block' }}
+                                        ref={taskMenuBtn}
+                                        onClick={() => {
+                                            handleOpenTaskMenu(index, column.id)
+                                        }}
+                                        id={styles.more_icon} />
+
+                                    <span
+                                        onClick={() => { handleTaskClose() }}
+                                        ref={taskMenu}
+                                        style={{ right: isTaskMenuOpen && taskIndex == index && columnId == column.id ? '0' : '-10rem' }}
+                                        className={styles.task_menu}>
+                                        <ul className={styles.task_menu_list}>
+                                            <li className={styles.task_menu_list_item}
+                                                onClick={() => {
+                                                    delTask(index, column.id)
+                                                }}><p>Delete</p><MdDelete
+                                                    id={styles.delete_icon} /></li>
+                                        </ul>
+                                    </span>
+                                </li>
                             ))}
                         </ul>
                     ) : (

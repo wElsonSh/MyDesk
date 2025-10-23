@@ -13,7 +13,6 @@ export function KanbanBoardContextComponent({ children }) {
         }
     });
 
-    // Selected board id with persistence
     const [selectedBoardId, setSelectedBoardId] = useState(() => {
         try {
             const id = localStorage.getItem("lastBoardId");
@@ -105,9 +104,24 @@ export function KanbanBoardContextComponent({ children }) {
         );
     };
     const delBoard = () => {
+        // Удаляем выбранную доску и на основе нового массива досок выставляем корректный selectedBoardId
+        setBoardsArr((prev) => {
+            const removedIndex = prev.findIndex((b) => b.id === Number(selectedBoardId));
+            const nextBoards = prev.filter((b) => b.id !== Number(selectedBoardId));
 
-        setBoardsArr(prev => prev.filter(b => b.id !== Number(selectedBoardId)))
-        setSelectedBoardId(null)
+            if (nextBoards.length === 0) {
+                // Нет досок — сброс
+                setSelectedBoardId(null);
+                return nextBoards;
+            }
+
+            // Выбираем ближайший доступный индекс после удаления
+            const fallbackIndex = Math.min(Math.max(removedIndex, 0), nextBoards.length - 1);
+            const nextSelectedId = nextBoards[fallbackIndex]?.id ?? nextBoards[0].id;
+            setSelectedBoardId(Number(nextSelectedId));
+
+            return nextBoards;
+        });
     }
 
 
@@ -115,17 +129,52 @@ export function KanbanBoardContextComponent({ children }) {
     const delColumn = (idColumn) => {
         setBoardsArr(prev => {
             const boardIndex = prev.findIndex(b => b.id === selectedBoardId);
+            // findIndex возвращает первый найденный индекс элемента массива, который удовлетворяет условию заданному в самом findIndex, в нашем случае это элемент чей id === selectedBoardId
             if (boardIndex < 0) {
                 return prev;
+                // в случае если findIndex не находит ни одного элемента удовлетворяющего условию он возвращает "-1" , поэтому если такое случается мы просто возвразаем предыдущее значение в setBoardsArr
             }
             const board = prev[boardIndex];
+            // создаем новую переменну, в которую помещаем доску найденого элемента, сделано это просто для удобства, можно и не указывать
             const newColumns = (board.columns || []).filter(c => c.id !== Number(idColumn));
-            // If nothing changed, return prev
+            // а здесь мы создаём новый список колонок, из которого выуживаем все колонки с нужным нам индекосм, такую процедуру мы уже проводили
             if (newColumns.length === (board.columns || []).length) {
                 return prev;
+                // здесь выполняем простейшую проверку на изменения, и говорим, что если ничего в плане длинны не изменилось, то в setBoardsArr возвращаем предыдущее значение
             }
             const updatedBoard = { ...board, columns: newColumns };
-            return prev.map((b, idx) => (idx === boardIndex ? updatedBoard : b));
+            // а здесь уже создаем новую, обновлённую доску с новым параметром columns, в который помещаем наш newColumns
+            return prev.map((b, i) => (i === boardIndex ? updatedBoard : b));
+            // а здесб точно также проводим проверку, если индекс == boardIndex то с помощью map вставляем updatedBoard, если же нет то прсото возвращаем жлемент и идем дальше
+        })
+    }
+
+    const delTask = (indexTask, idColumn) => {
+        setBoardsArr(prev => {
+            const boardIndex = prev.findIndex(b => b.id === selectedBoardId);
+
+            if (boardIndex < 0) {
+                return prev
+            }
+            const board = prev[boardIndex];
+
+            const columnIndex = (board.columns).findIndex(c => c.id === idColumn);
+
+            const column = board.columns[columnIndex];
+
+            const newTasks = (column.tasks || []).filter((e, i) => i !== Number(indexTask))
+
+            if (newTasks.length === (column.tasks || []).length) {
+                return prev;
+            }
+            const updatedColumn = { ...column, tasks: newTasks };
+
+            const newColumns = board.columns.map((e, i) => (i === columnIndex ? updatedColumn : e));
+
+            const updatedBoard = { ...board, columns: newColumns };
+
+            return prev.map((b, i) => (i === boardIndex ? updatedBoard : b));
+
         })
     }
 
@@ -153,6 +202,7 @@ export function KanbanBoardContextComponent({ children }) {
         delColumn,
         delBoard,
         handleSetIsAlertVisible,
+        delTask,
     };
 
     return (
