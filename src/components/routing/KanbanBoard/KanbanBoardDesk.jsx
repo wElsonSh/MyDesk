@@ -51,7 +51,7 @@ export function KanbanBoardDesk() {
 
     return (
         <div className={styles.KanbanBoardDesk}>
-            <div onWheel={handleScrollWheel} ref={scrollRef} className={styles.KanbanBoardDesk_container}>
+            <div className={styles.KanbanBoardDesk_container}>
                 <div className={styles.KanbanBoardDesk_columns_list}>
                     {
                         ArrDeskColumns.length === 0 ? (

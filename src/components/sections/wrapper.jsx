@@ -24,11 +24,6 @@ export function Wrapper() {
                         </Routes>
                     </section>
                 </div>
-                <div
-                    style={{ bottom: isAlertVisible ? "0.5rem" : "-5rem" }}
-                    className={styles.alert}>
-                    <p>{nameAlert} successfully deleted</p>
-                </div>
             </main>
         </BrowserRouter>
     );

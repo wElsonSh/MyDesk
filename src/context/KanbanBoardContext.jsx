@@ -181,14 +181,6 @@ export function KanbanBoardContextComponent({ children }) {
     const [isAlertVisible, setIsAlertVisible] = useState(false)
     const [nameAlert, setNameAlert] = useState("")
 
-    const handleSetIsAlertVisible = (name) => {
-        setIsAlertVisible(true)
-        setNameAlert(name)
-        setTimeout(() => {
-            setIsAlertVisible(false)
-        }, 2000)
-    }
-
     const value = {
         BoardsArr,
         currentBoard,
@@ -201,7 +193,6 @@ export function KanbanBoardContextComponent({ children }) {
         addTask,
         delColumn,
         delBoard,
-        handleSetIsAlertVisible,
         delTask,
     };
 

@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdMoreVert } from "react-icons/md";
 export function KanbanBoardDeskColumns({ columns }) {
 
-    const { addTask, selectedBoardId, delColumn, handleSetIsAlertVisible, delTask } = useContext(KanbanBoardContext);
+    const { addTask, selectedBoardId, delColumn, delTask } = useContext(KanbanBoardContext);
 
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
@@ -100,7 +100,7 @@ export function KanbanBoardDeskColumns({ columns }) {
                                 <MdDelete
                                     onClick={() => {
                                         handleDelColumn(column.id)
-                                        handleSetIsAlertVisible('Column')
+
                                     }}
                                     id={styles.delete_icon} />
                             </div>
@@ -129,26 +129,34 @@ export function KanbanBoardDeskColumns({ columns }) {
                                 <li
                                     key={index}
                                     className={styles.KanbanBoardDesk_column_tasksList_item}>
-                                    <p>{task}</p>
-                                    <MdMoreVert
-                                        style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'none' : 'block' }}
-                                        ref={taskMenuBtn}
-                                        onClick={() => {
-                                            handleOpenTaskMenu(index, column.id)
-                                        }}
-                                        id={styles.more_icon} />
+                                    <div className={styles.KanbanBoardDesk_column_tasksList_item_header}>
+                                        <span className={styles.task_id}><p>#{index + 1}</p></span>
+                                        <MdMoreVert
+                                            style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'none' : 'block' }}
+                                            ref={taskMenuBtn}
+                                            onClick={() => {
+                                                handleOpenTaskMenu(index, column.id)
+                                            }}
+                                            id={styles.more_icon} />
+                                    </div>
+                                    <div className={styles.KanbanBoardDesk_column_tasksList_item_textContainer}>
+                                        <div className={styles.KanbanBoardDesk_column_tasksList_item_text}>
+                                            <p>{task}</p>
+                                        </div>
+                                    </div>
 
                                     <span
                                         onClick={() => { handleTaskClose() }}
                                         ref={taskMenu}
-                                        style={{ right: isTaskMenuOpen && taskIndex == index && columnId == column.id ? '0' : '-10rem' }}
+                                        style={{ top: isTaskMenuOpen && taskIndex == index && columnId == column.id ? '0' : '-50rem' }}
                                         className={styles.task_menu}>
-                                        <ul className={styles.task_menu_list}>
-                                            <li className={styles.task_menu_list_item}
-                                                onClick={() => {
-                                                    delTask(index, column.id)
-                                                }}><p>Delete</p><MdDelete
-                                                    id={styles.delete_icon} /></li>
+                                        <ul className={styles.taskMenu_list}>
+                                            <li className={styles.task_menu_list_item} onClick={() => {
+                                                delTask(index, column.id)
+
+                                            }}>
+                                                <MdDelete />
+                                            </li>
                                         </ul>
                                     </span>
                                 </li>
