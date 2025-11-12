@@ -103,6 +103,9 @@ export function KanbanBoardContextComponent({ children }) {
             })
         );
     };
+
+
+
     const delBoard = () => {
         // Удаляем выбранную доску и на основе нового массива досок выставляем корректный selectedBoardId
         setBoardsArr((prev) => {
@@ -127,6 +130,7 @@ export function KanbanBoardContextComponent({ children }) {
 
 
     const delColumn = (idColumn) => {
+
         setBoardsArr(prev => {
             const boardIndex = prev.findIndex(b => b.id === selectedBoardId);
             // findIndex возвращает первый найденный индекс элемента массива, который удовлетворяет условию заданному в самом findIndex, в нашем случае это элемент чей id === selectedBoardId
@@ -150,6 +154,8 @@ export function KanbanBoardContextComponent({ children }) {
     }
 
     const delTask = (indexTask, idColumn) => {
+        console.log(indexTask, idColumn, 'Del');
+
         setBoardsArr(prev => {
             const boardIndex = prev.findIndex(b => b.id === selectedBoardId);
 
@@ -178,15 +184,10 @@ export function KanbanBoardContextComponent({ children }) {
         })
     }
 
-    const [isAlertVisible, setIsAlertVisible] = useState(false)
-    const [nameAlert, setNameAlert] = useState("")
-
     const value = {
         BoardsArr,
         currentBoard,
         selectedBoardId,
-        isAlertVisible,
-        nameAlert,
         createBoard,
         selectBoard,
         addColumnToBoard,

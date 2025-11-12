@@ -8,18 +8,6 @@ export function KanbanBoardDesk() {
     const { currentBoard, selectedBoardId, addColumnToBoard } = useContext(KanbanBoardContext);
 
     const ArrDeskColumns = [...(currentBoard?.columns || [])];
-    const scrollRef = useRef(null)
-
-    const handleScrollWheel = (e) => {
-        if (scrollRef.current) {
-            e.preventDefault()
-            scrollRef.current.scrollLeft += e.deltaY;
-        }
-    }
-
-
-
-
 
     const [isInpuCtVisible, seIstInputCVisible] = useState(false)
     const inputCRef = useRef(null)

@@ -347,11 +347,11 @@
                                 flex-direction: column;
                                 position: relative;
                                 overflow: hidden;
-                                transition: all .4s ease;
-                                will-change: box-shadow;
+                                transition: all .2s ease;
+                                will-change: border;
 
                                 &:hover {
-                                    box-shadow: 0 0 2px #121212;
+                                    box-shadow: 0px 0px 0px 2px #3333337a;
                                 }
 
                                 .KanbanBoardDesk_column_tasksList_item_header {
@@ -363,6 +363,21 @@
                                     display: flex;
                                     align-items: center;
                                     justify-content: space-between;
+
+                                    #del_btn_icon {
+                                        transform: scale(1.2);
+                                        color: #cb4c46;
+                                        cursor: pointer;
+                                        transition: all .2s ease;
+
+                                        &:hover {
+                                            transform: scale(1.5);
+                                        }
+
+                                        &:active {
+                                            transform: scale(1.2);
+                                        }
+                                    }
 
                                     .task_id {
                                         p {

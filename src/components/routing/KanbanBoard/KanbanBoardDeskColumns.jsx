@@ -7,14 +7,12 @@ export function KanbanBoardDeskColumns({ columns }) {
 
     const { addTask, selectedBoardId, delColumn, delTask } = useContext(KanbanBoardContext);
 
+
     const [isInputTVisible, setIsInputTVisible] = useState(false)
     const [tInputValue, setTInputValue] = useState('')
     const inputTRef = useRef([])
     const [tInputIndex, setTInputIndex] = useState(null)
     const [isTaskMenuOpen, setIsTaskMenuOpen] = useState(false)
-
-    const taskMenu = useRef(null)
-    const taskMenuBtn = useRef(null)
 
     const setTInputRef = (index) => (element) => {
         inputTRef.current[index] = element;
@@ -61,26 +59,20 @@ export function KanbanBoardDeskColumns({ columns }) {
         setTaskIndex(index)
         setIsTaskMenuOpen(true)
     }
-    const handleTaskClose = () => {
-        setIsTaskMenuOpen(false)
-        setTaskIndex(null)
-    }
 
     useEffect(() => {
-        const handleClickOutsideTaskMenu = (event) => {
-            if (
-                taskMenu.current && !taskMenu.current.contains(event.target) && taskMenuBtn.current && !taskMenuBtn.current.contains(event.target)
-            ) {
+        if (!isTaskMenuOpen) return
+        const handleClickDel = (event) => {
+            if (event.target.closest('.task_del_btn') && event.target.closest('.task_more_btn')) {
+                console.log("hello world!")
+            } else if (!event.target.closest('.task_del_btn') && !event.target.closest('.task_more_btn')) {
                 setIsTaskMenuOpen(false)
-                setTaskIndex(null)
             }
         }
-        if (isTaskMenuOpen) {
-            document.addEventListener("mousedown", handleClickOutsideTaskMenu)
-        }
+        document.addEventListener('click', handleClickDel)
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutsideTaskMenu)
+            document.removeEventListener('click', handleClickDel)
         }
     }, [isTaskMenuOpen])
 
@@ -133,32 +125,25 @@ export function KanbanBoardDeskColumns({ columns }) {
                                         <span className={styles.task_id}><p>#{index + 1}</p></span>
                                         <MdMoreVert
                                             style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'none' : 'block' }}
-                                            ref={taskMenuBtn}
                                             onClick={() => {
                                                 handleOpenTaskMenu(index, column.id)
                                             }}
-                                            id={styles.more_icon} />
+                                            id={styles.more_icon}
+                                            className='task_more_btn' />
+                                        <MdDelete
+                                            style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'block' : 'none' }}
+                                            onClick={() => {
+                                                setIsTaskMenuOpen(false)
+                                                delTask(index, column.id)
+                                            }}
+                                            id={styles.del_btn_icon}
+                                            className='task_del_btn' />
                                     </div>
                                     <div className={styles.KanbanBoardDesk_column_tasksList_item_textContainer}>
                                         <div className={styles.KanbanBoardDesk_column_tasksList_item_text}>
                                             <p>{task}</p>
                                         </div>
                                     </div>
-
-                                    <span
-                                        onClick={() => { handleTaskClose() }}
-                                        ref={taskMenu}
-                                        style={{ top: isTaskMenuOpen && taskIndex == index && columnId == column.id ? '0' : '-50rem' }}
-                                        className={styles.task_menu}>
-                                        <ul className={styles.taskMenu_list}>
-                                            <li className={styles.task_menu_list_item} onClick={() => {
-                                                delTask(index, column.id)
-
-                                            }}>
-                                                <MdDelete />
-                                            </li>
-                                        </ul>
-                                    </span>
                                 </li>
                             ))}
                         </ul>
