@@ -1,6 +1,6 @@
 import { KanbanBoardDeskColumns } from "@/components/routing/KanbanBoard/KanbanBoardDeskColumns";
 import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
-import styles from "@/styles/components/routing/KanbanBoard.module.scss";
+import styles from "@/styles/components/routing/KanbanBoard/KanbanBoard.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 export function KanbanBoardDesk() {

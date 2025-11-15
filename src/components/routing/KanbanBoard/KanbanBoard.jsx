@@ -1,10 +1,12 @@
 import { KanbanBoardDesk } from "@/components/routing/KanbanBoard/KanbanBoardDesk";
 import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
-import styles from "@/styles/components/routing/KanbanBoard.module.scss";
+import styles from "@/styles/components/routing/KanbanBoard/KanbanBoard.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
+
+import { DndContext } from '@dnd-kit/core';
 
 export function KanbanBoard() {
     const { BoardsArr, createBoard, selectBoard, selectedBoardId, delBoard } = useContext(KanbanBoardContext);
@@ -49,83 +51,85 @@ export function KanbanBoard() {
 
     return (
         <div className={styles.kanbanBoard}>
-            <header className={styles.kanbanBoard_header}>
-                <div className={styles.kanbanBoard_header_Nav}>
-                    <span
-                        onClick={() => {
-                            setisInputVisible(true)
-                        }}
-                        className={styles.kanbanBoard_header_Nav_item}>Create new board <FaPlus />
-                    </span>
-                    <span
-                        style={{ display: isInputVisible ? 'flex' : "none" }}
-                        className={styles.kanbanBoard_header_Nav_item_creater}>
-                        <input
-                            onChange={handleInputOnChange}
-                            value={inputValue}
-                            onKeyDown={handleInputKeyDown}
-                            ref={inputRef}
-                            onBlur={handleInputBlur}
-                            type="text"
-                            placeholder="desk name: " />
-                        <IoCloseSharp
+            <DndContext>
+                <header className={styles.kanbanBoard_header}>
+                    <div className={styles.kanbanBoard_header_Nav}>
+                        <span
                             onClick={() => {
-                                setisInputVisible(false)
+                                setisInputVisible(true)
                             }}
-                            className={styles.close_icon} />
-                    </span>
-                </div>
-                <nav
-                    ref={scrollRef}
-                    className={styles.kanbanBoard_header_containerNav}
-                    onWheel={handleScrollWheel}>
-                    <ul className={styles.kanbanBoard_header_containerNav_list}>
-                        {[...BoardsArr].reverse().map((board) => (
-                            <li
-
-                                onClick={() => { handleSetDeskId(board.id) }}
-                                className={styles.kanbanBoard_header_containerNav_list_item}
-                                key={board.id}>
-                                <NavLink
-                                    onClick={() => selectBoard(board.id)}
-                                    className={({ isActive }) =>
-                                        `${styles.kanbanBoard_header_containerNav_list_item_Link} ${selectedBoardId === board.id ? styles.active : ''}`
-                                    }
-                                    to={'/taskscontroller/desk'}
-                                >
-                                    <p>{board.name}</p>
-                                </NavLink>
-
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-                <nav
-                    style={{ display: selectedBoardId != null ? 'block' : 'none' }}
-                    className={styles.kanbanBoard_header_containerNavControl}>
-                    <ul className={styles.kanbanBoard_header_containerNavControl_list}>
-                        <li
-                            onClick={delBoard}
-                            className={styles.kanbanBoard_header_containerNavControl_list_item}>
+                            className={styles.kanbanBoard_header_Nav_item}>Create new board <FaPlus />
+                        </span>
+                        <div
+                            style={{ display: isInputVisible ? 'flex' : "none" }}
+                            className={styles.kanbanBoard_header_Nav_item_creater}>
+                            <input
+                                onChange={handleInputOnChange}
+                                value={inputValue}
+                                onKeyDown={handleInputKeyDown}
+                                ref={inputRef}
+                                onBlur={handleInputBlur}
+                                type="text"
+                                placeholder="desk name: " />
                             <IoCloseSharp
-                                title="Delet Desk"
-                                id={styles.close_icon} />
-                        </li>
-                    </ul>
-                </nav>
-            </header>
-            <Routes>
-                <Route path="desk" element={selectedBoardId !== null ? (
-                    <KanbanBoardDesk />
-                ) : (
-                    <span className={styles.clearBoard}>
-                        <h1>Create a new desk</h1>
-                    </span>
-                )} />
-                <Route path="*" element={<Navigate to="desk" replace />} />
+                                onClick={() => {
+                                    setisInputVisible(false)
+                                }}
+                                className={styles.close_icon} />
+                        </div>
+                    </div>
+                    <nav
+                        ref={scrollRef}
+                        className={styles.kanbanBoard_header_containerNav}
+                        onWheel={handleScrollWheel}>
+                        <ul className={styles.kanbanBoard_header_containerNav_list}>
+                            {[...BoardsArr].reverse().map((board) => (
+                                <li
+
+                                    onClick={() => { handleSetDeskId(board.id) }}
+                                    className={styles.kanbanBoard_header_containerNav_list_item}
+                                    key={board.id}>
+                                    <NavLink
+                                        onClick={() => selectBoard(board.id)}
+                                        className={({ isActive }) =>
+                                            `${styles.kanbanBoard_header_containerNav_list_item_Link} ${selectedBoardId === board.id ? styles.active : ''}`
+                                        }
+                                        to={'/taskscontroller/desk'}
+                                    >
+                                        <p>{board.name}</p>
+                                    </NavLink>
+
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                    <nav
+                        style={{ display: selectedBoardId != null ? 'block' : 'none' }}
+                        className={styles.kanbanBoard_header_containerNavControl}>
+                        <ul className={styles.kanbanBoard_header_containerNavControl_list}>
+                            <li
+                                onClick={delBoard}
+                                className={styles.kanbanBoard_header_containerNavControl_list_item}>
+                                <IoCloseSharp
+                                    title="Delet Desk"
+                                    id={styles.close_icon} />
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+                <Routes>
+                    <Route path="desk" element={selectedBoardId !== null ? (
+                        <KanbanBoardDesk />
+                    ) : (
+                        <span className={styles.clearBoard}>
+                            <h1>Create a new desk</h1>
+                        </span>
+                    )} />
+                    <Route path="*" element={<Navigate to="desk" replace />} />
 
 
-            </Routes>
+                </Routes>
+            </DndContext>
         </div >
     );
 }

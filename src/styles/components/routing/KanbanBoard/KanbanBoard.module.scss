@@ -4,7 +4,7 @@
     background-color: transparent;
     box-sizing: border-box;
     border-radius: 5px;
-    overflow: hidden;
+    // overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -54,7 +54,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
+        box-shadow: 5px 5px 10px #55555533;
+
 
         .kanbanBoard_header_Nav {
             display: flex;
@@ -62,6 +63,7 @@
             gap: 1rem;
             width: fit-content;
             max-width: 30%;
+            padding-right: 1rem;
 
             .kanbanBoard_header_Nav_item {
                 width: fit-content;
@@ -92,9 +94,8 @@
                 width: fit-content;
                 height: 100%;
                 border-radius: 10px;
-                padding: 0.2rem 0.5rem;
+                padding: 0.3rem 0.7rem;
                 font-family: 'CascadiaCode';
-                gap: 0.2rem;
                 cursor: pointer;
                 transition: all .2s ease;
                 will-change: color;
@@ -102,15 +103,14 @@
                 align-items: center;
                 justify-content: center;
                 white-space: nowrap;
-                min-width: 12rem;
                 box-sizing: border-box;
-                border: 2px solid #b6caeb;
+                border: 2px dashed #b6caeb;
                 background-color: #b6caeb;
                 color: #121212;
 
                 input {
                     height: 100%;
-                    width: 10rem;
+                    max-width: 7rem;
                     background-color: transparent;
                     border: none;
                     outline: none;
@@ -119,7 +119,6 @@
                     color: #121212;
                     font-family: 'CascadiaCode';
                     font-size: 15px;
-
                 }
 
                 input::placeholder {
@@ -275,7 +274,6 @@
         background-color: transparent;
         border-top: 2px dashed #121212;
         padding-top: 1rem;
-        overflow: hidden;
         display: flex;
         flex-direction: column;
 
@@ -283,7 +281,7 @@
             width: 100%;
             height: 100%;
             position: relative;
-            overflow-x: auto;
+            overflow-x: scroll;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             scroll-snap-type: y mandatory;
@@ -305,7 +303,8 @@
                 .KanbanBoardDesk_column {
                     min-width: 15rem;
                     max-width: 15rem;
-                    height: 100%;
+                    height: fit-content;
+                    max-height: 100%;
                     background-color: #ebe3cf;
                     backdrop-filter: blur(10px);
                     border-radius: 20px;
@@ -313,6 +312,7 @@
                     overflow-y: auto;
                     scrollbar-width: none;
                     padding: 0.5rem;
+                    box-shadow: 5px 5px 10px #55555533;
 
 
                     .KanbanBoardDesk_column_container {
@@ -333,134 +333,6 @@
                             gap: 1rem;
                             padding-top: 1rem;
                             padding-bottom: 0.5rem;
-                        }
-
-
-                        .no_clear {
-                            .KanbanBoardDesk_column_tasksList_item {
-                                width: 100%;
-                                min-height: 2rem;
-                                background-color: #d6cbb0;
-                                border-radius: 10px;
-                                display: flex;
-                                align-items: center;
-                                flex-direction: column;
-                                position: relative;
-                                overflow: hidden;
-                                transition: all .2s ease;
-                                will-change: border;
-
-                                &:hover {
-                                    box-shadow: 0px 0px 0px 2px #3333337a;
-                                }
-
-                                .KanbanBoardDesk_column_tasksList_item_header {
-                                    width: 100%;
-                                    height: 2rem;
-                                    max-height: 2rem;
-                                    padding: 0.5rem;
-                                    box-sizing: border-box;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: space-between;
-
-                                    #del_btn_icon {
-                                        transform: scale(1.2);
-                                        color: #cb4c46;
-                                        cursor: pointer;
-                                        transition: all .2s ease;
-
-                                        &:hover {
-                                            transform: scale(1.5);
-                                        }
-
-                                        &:active {
-                                            transform: scale(1.2);
-                                        }
-                                    }
-
-                                    .task_id {
-                                        p {
-                                            color: #666;
-                                        }
-                                    }
-                                }
-
-                                .KanbanBoardDesk_column_tasksList_item_textContainer {
-                                    width: 100%;
-                                    height: fit-content;
-                                    padding: 0.5rem;
-                                    box-sizing: border-box;
-
-                                    .KanbanBoardDesk_column_tasksList_item_text {
-                                        width: 100%;
-                                        height: fit-content;
-                                        background-color: #bdb195;
-                                        border-radius: 10px;
-                                        padding: 0.5rem;
-                                        box-sizing: border-box;
-                                        text-align: start;
-
-                                        p {
-                                            color: #333;
-                                            overflow-wrap: break-word;
-                                        }
-                                    }
-                                }
-
-                                #more_icon {
-                                    transform: scale(1.5);
-                                    color: #666;
-                                    cursor: pointer;
-                                    transition: all .2s ease;
-
-                                    &:hover {
-                                        color: #121212;
-                                    }
-                                }
-
-                                .task_menu {
-                                    width: fit-content;
-                                    height: 100%;
-                                    max-height: 5.5rem;
-                                    position: absolute;
-                                    z-index: 10;
-                                    background-color: #222222d2;
-                                    backdrop-filter: blur(2px);
-                                    border-radius: 10px;
-                                    transition: all .3s ease;
-                                    padding: 0.5rem;
-                                    box-sizing: border-box;
-                                    right: 0;
-
-                                    .taskMenu_list {
-                                        width: 100%;
-                                        height: fit-content;
-                                        display: grid;
-                                        grid-template-rows: 1fr 1fr 1fr;
-                                        gap: 0.2rem;
-
-                                        .task_menu_list_item {
-                                            width: 100%;
-                                            height: 100%;
-                                            display: flex;
-                                            align-items: center;
-                                            justify-content: start;
-                                            padding: 0.2rem;
-
-                                            &:hover {
-                                                box-shadow: 0 0 2px #fff;
-                                            }
-
-                                            &:nth-child(1) {
-                                                background-color: #cb4c46;
-                                                box-sizing: border-box;
-                                                border-radius: 5px;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
 
                         .clear {
@@ -611,6 +483,7 @@
                     cursor: pointer;
                     transition: all .1s ease;
                     will-change: transform;
+                    box-shadow: 5px 5px 10px #55555533;
 
                     &:hover {
                         translate: 0 -5px;
@@ -655,6 +528,7 @@
                                 outline: none;
                                 font-family: 'CascadiaCode';
                                 font-size: 15px;
+
                             }
                         }
                     }

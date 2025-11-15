@@ -1,8 +1,9 @@
+import { KanbanBoardTask } from '@/components/ui/KanbanBoard/KanbanBoardTask';
 import { KanbanBoardContext } from '@/context/KanbanBoardContext.jsx';
-import styles from "@/styles/components/routing/KanbanBoard.module.scss";
+import styles from "@/styles/components/routing/KanbanBoard/KanbanBoard.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { MdDelete, MdMoreVert } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 export function KanbanBoardDeskColumns({ columns }) {
 
     const { addTask, selectedBoardId, delColumn, delTask } = useContext(KanbanBoardContext);
@@ -80,14 +81,15 @@ export function KanbanBoardDeskColumns({ columns }) {
         columns.map((column) => (
             <div
                 key={column.id}
-                className={styles.KanbanBoardDesk_column}>
+                className={styles.KanbanBoardDesk_column}
+            >
                 <div className={styles.KanbanBoardDesk_column_container}>
 
                     <div className={styles.KanbanBoardDesk_column_title_container}>
 
                         <div className={styles.KanbanBoardDesk_column_title}>
                             <p>{column.name}</p>
-                            <div
+                            <divKanbanBoardDesk_column_tasksList
                                 className={styles.KanbanBoardDesk_column_title_delContainer}>
                                 <MdDelete
                                     onClick={() => {
@@ -95,7 +97,7 @@ export function KanbanBoardDeskColumns({ columns }) {
 
                                     }}
                                     id={styles.delete_icon} />
-                            </div>
+                            </divKanbanBoardDesk_column_tasksList>
                         </div>
                         <div className={styles.KanbanBoardDesk_column_taskCreator_container}>
                             <span
@@ -118,33 +120,7 @@ export function KanbanBoardDeskColumns({ columns }) {
                     {(column.tasks && column.tasks.length > 0) ? (
                         <ul className={`${styles.KanbanBoardDesk_column_tasksList} ${styles.no_clear}`}>
                             {column.tasks.map((task, index) => (
-                                <li
-                                    key={index}
-                                    className={styles.KanbanBoardDesk_column_tasksList_item}>
-                                    <div className={styles.KanbanBoardDesk_column_tasksList_item_header}>
-                                        <span className={styles.task_id}><p>#{index + 1}</p></span>
-                                        <MdMoreVert
-                                            style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'none' : 'block' }}
-                                            onClick={() => {
-                                                handleOpenTaskMenu(index, column.id)
-                                            }}
-                                            id={styles.more_icon}
-                                            className='task_more_btn' />
-                                        <MdDelete
-                                            style={{ display: isTaskMenuOpen && taskIndex == index && columnId == column.id ? 'block' : 'none' }}
-                                            onClick={() => {
-                                                setIsTaskMenuOpen(false)
-                                                delTask(index, column.id)
-                                            }}
-                                            id={styles.del_btn_icon}
-                                            className='task_del_btn' />
-                                    </div>
-                                    <div className={styles.KanbanBoardDesk_column_tasksList_item_textContainer}>
-                                        <div className={styles.KanbanBoardDesk_column_tasksList_item_text}>
-                                            <p>{task}</p>
-                                        </div>
-                                    </div>
-                                </li>
+                                <KanbanBoardTask index={index} isTaskMenuOpen={isTaskMenuOpen} taskIndex={taskIndex} columnId={columnId} column={column} handleOpenTaskMenu={handleOpenTaskMenu} setIsTaskMenuOpen={setIsTaskMenuOpen} delTask={delTask} task={task} />
                             ))}
                         </ul>
                     ) : (
